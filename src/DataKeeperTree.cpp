@@ -2,9 +2,8 @@
 #define SEPORATOR std::string("/")
 /*!
  * \todo
- * Сделать загрузку и выгрузку дампов, удаление нижнего и всех элементов
- * Сделать отдельный класс логирования или вставить с работы
- * Сделать граф интерфейс для примера
+ * Сделать выгрузку дампов
+ * Сделать граф интерфейс для примера на сервере и клиенте
  * Сделать функции отправки и приянтия дампов от клиента
  */
 
@@ -69,8 +68,6 @@ void DataKeeperTree::pop_child()
 {
     if(m_childs != nullptr)
         m_childs->pop_back();
-//    else
-    //        write_log("Not init childs list! Make it before pop");
 }
 
 void DataKeeperTree::erase_elem(DataKeeperTree *elem)
@@ -93,8 +90,6 @@ DataKeeperTree *DataKeeperTree::get_parent()
 
 void DataKeeperTree::del_all_child(DataKeeperTree* branch)
 {
-//    if(m_childs==nullptr) write_log("Not init childs list! Make it before clear");
-
     for(auto it : *branch->m_childs)
         del_all_child(it);
     if(m_childs!=nullptr) m_childs->clear();
@@ -143,9 +138,9 @@ DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
 }
 
 //!
-//! \brief DataKeeperTree::_getDump
-//! \param parent
-//! \param str
+//! \brief DataKeeperTree::_getDump - service func for recursive getting dump of tree
+//! \param parent - for call all children and return litlle dump string
+//! \param str - one string of all tree, recursive trow like link
 //!
 void DataKeeperTree::_getDump(DataKeeperTree* parent , std::string &str)
 {

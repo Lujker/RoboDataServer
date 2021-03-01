@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QVariant>
 
-
 using std::string;
 
 class Attribute
@@ -17,11 +16,11 @@ public:
 	virtual ~Attribute();	
     inline bool is_root();
     inline bool is_valid();
-	const string& get_name();
     inline QVariant* get_val();
+	const string& get_name();
     string make_dump_string();
 
-protected:
+protected:///Members
 	bool m_is_root;
 	QVariant* m_val;
 	string m_name;
@@ -39,10 +38,11 @@ public:
 	DataKeeperTree(QVariant*, DataKeeperTree*) noexcept;
     virtual ~DataKeeperTree();
 
+    ///TREE INTERACTION
 	virtual void push_child(DataKeeperTree*);
     virtual void pop_child();
-    static void erase_elem(DataKeeperTree*);
     virtual void del_all_child(DataKeeperTree*); ///recursive del all m_childs
+    static void erase_elem(DataKeeperTree*);
 
     ///GETTERS
     inline DataKeeperTree *get_parent();
@@ -54,13 +54,14 @@ public:
     inline size_t childs_count(); ///return m_childs.size()
 
 
+    ///DUMPS WORK
     virtual string get_dump(DataKeeperTree*);	///recursive make dump from this elem
 	virtual DataKeeperTree* from_dump(string&); ///convert from string dump
 
 private:
     void _getDump(DataKeeperTree* ,string&);
 
-protected:
+protected: ///Members
 	Attribute m_atr;
 	std::vector<DataKeeperTree*>* m_childs;
 	DataKeeperTree* m_parent;
