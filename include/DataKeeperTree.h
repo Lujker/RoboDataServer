@@ -57,23 +57,8 @@ public:
     virtual string get_dump(DataKeeperTree*);	///recursive make dump from this elem
 	virtual DataKeeperTree* from_dump(string&); ///convert from string dump
 
-    class DKTIterator: public std::iterator<std::input_iterator_tag, DataKeeperTree> {
-        friend class DataKeeperTree;
-    private:
-        DKTIterator(value_type*);
-    public:
-        DKTIterator(const DKTIterator&);
-
-        bool operator!=(DKTIterator const& other) const;
-        bool operator==(DKTIterator const& other) const;
-        typename DKTIterator::reference operator*() const;
-        DKTIterator &operator++();
-    private:
-        value_type* p;
-	};
-
 private:
-    void _getDump(std::list<string>&);
+    void _getDump(DataKeeperTree* ,string&);
 
 protected:
 	Attribute m_atr;

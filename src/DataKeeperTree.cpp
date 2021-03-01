@@ -133,27 +133,7 @@ bool DataKeeperTree::has_name()
 string DataKeeperTree::get_dump(DataKeeperTree* branch)
 {
     std::string dump_str;
-//    if(branch!=nullptr){
-//        if(is_root() && m_childs!=nullptr && !m_childs->empty()) {
-//            for(auto it: *m_childs)
-//                dump_str += m_atr.make_dump_string() + make_dump(it) + "\n";
-//        }
-//        else{
-
-//        }
-//    }
-//        else{
-//            if(has_name()){
-//                dump_str += SEPORATOR + m_atr.get_name();
-//                if(has_attribute())
-//                    dump_str += SEPORATOR + m_atr.get_val()->toString().toStdString();
-//            }
-//            else
-//                dump_str += SEPORATOR + m_atr.get_val()->toString().toStdString();
-//        }
-//        for(auto it:*m_childs)
-//            dump_str += "\n" + it->make_dump(this);
-//    }
+    _getDump(branch, dump_str);
     return dump_str;
 }
 
@@ -162,9 +142,21 @@ DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
     return nullptr;
 }
 
-void DataKeeperTree::_getDump(std::list<std::string> &strList)
+//!
+//! \brief DataKeeperTree::_getDump
+//! \param parent
+//! \param str
+//!
+void DataKeeperTree::_getDump(DataKeeperTree* parent , std::string &str)
 {
-
+    if(parent!=nullptr){
+        if(parent->m_childs!=nullptr && !m_childs->empty())
+            for(auto it: *parent->m_childs){ ///call all childes
+                _getDump(it ,str+=parent->m_atr.make_dump_string()); ///recurive call for write new elem to str
+            }
+        else
+            str+=parent->m_atr.make_dump_string()+"\n";
+    }
 }
 
 DataKeeperTree::~DataKeeperTree()
@@ -226,11 +218,4 @@ std::string Attribute::make_dump_string()
             dump_str += get_val()->toString().toStdString();
 
     return dump_str;
-}
-
-DataKeeperTree::DKTIterator &DataKeeperTree::DKTIterator::operator++()
-{
-//    if(p->m_childs!=nullptr && !p->m_childs->empty()) p = p->m_childs->at(0);
-
-    return *this;
 }
