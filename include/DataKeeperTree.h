@@ -28,7 +28,6 @@ protected:///Members
 
 class DataKeeperTree
 {
-
 public:
 	DataKeeperTree() noexcept;
 	DataKeeperTree(const DataKeeperTree&) noexcept;
@@ -40,8 +39,8 @@ public:
 
     ///TREE INTERACTION
 	virtual void push_child(DataKeeperTree*);
+    virtual void del_all_child(DataKeeperTree*); ///recursive del all obj in m_childs
     virtual void pop_child();
-    virtual void del_all_child(DataKeeperTree*); ///recursive del all m_childs
     static void erase_elem(DataKeeperTree*);
 
     ///GETTERS
@@ -59,7 +58,8 @@ public:
 	virtual DataKeeperTree* from_dump(string&); ///convert from string dump
 
 private:
-    void _getDump(DataKeeperTree* ,string&);
+    void _getDump(DataKeeperTree*, string&);
+    void _parseDumpLine(DataKeeperTree*, string&);
 
 protected: ///Members
 	Attribute m_atr;

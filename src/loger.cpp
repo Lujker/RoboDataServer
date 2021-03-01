@@ -7,8 +7,8 @@ static Loger* G_loger = nullptr;
 bool Loger::init(const std::string &logFilePath)
 {
     try{
-        if(logFilePath==""){
-            std::cout<<"Пусть к файлу журнала не указан!\n";
+        if(logFilePath==""||logFilePath.empty()){
+            std::cout<<"Log file path is empty\n";
             return false;
         }
         if(m_out.is_open()) m_out.close();
@@ -19,7 +19,7 @@ bool Loger::init(const std::string &logFilePath)
             if(createLogFile(logFilePath)){
             }
             else{
-                std::cout<<"Невозможно создать файл журнала!\n";
+                std::cout<<"Fail to create log file!\n";
                 return m_isInit = false;
             }
         }

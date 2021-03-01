@@ -2,7 +2,7 @@
 #define SEPORATOR std::string("/")
 /*!
  * \todo
- * Сделать выгрузку дампов
+ * Сделать загрузку дампов
  * Сделать граф интерфейс для примера на сервере и клиенте
  * Сделать функции отправки и приянтия дампов от клиента
  */
@@ -67,7 +67,7 @@ void DataKeeperTree::push_child(DataKeeperTree* elem)
 void DataKeeperTree::pop_child()
 {
     if(m_childs != nullptr)
-        m_childs->pop_back();
+        m_childs->pop_back(); ///check next func if worry about memory
 }
 
 void DataKeeperTree::erase_elem(DataKeeperTree *elem)
@@ -78,7 +78,8 @@ void DataKeeperTree::erase_elem(DataKeeperTree *elem)
 
     auto it = std::find(vect_ptr->begin(), vect_ptr->end(), elem);
     if(it!=vect_ptr->end()){
-        vect_ptr->erase(it);
+        const auto new_end (std::remove(vect_ptr->begin(),vect_ptr->end(),it));
+        vect_ptr->erase(new_end, vect_ptr->end()); ///in erase use deallocate() and destroy(), all right ;)
         elem=nullptr;
     }
 }
@@ -152,6 +153,14 @@ void DataKeeperTree::_getDump(DataKeeperTree* parent , std::string &str)
         else
             str+=parent->m_atr.make_dump_string()+"\n";
     }
+}
+
+//!
+//! \brief DataKeeperTree::_parseDump - get a line from dump and pars to DataKeeper structure
+//!
+void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
+{
+
 }
 
 DataKeeperTree::~DataKeeperTree()
