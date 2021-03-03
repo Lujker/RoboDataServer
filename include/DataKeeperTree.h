@@ -1,11 +1,17 @@
 #pragma once
 #include <string>
 #include <list>
+#include <vector>
 #include <algorithm>
+#include <sstream>
 #include <QObject>
 #include <QVariant>
 
 using std::string;
+
+std::vector<string> split (const string& s, string& delimiter);
+std::vector<string> split (const string& s, char& delimiter);
+
 
 class Attribute
 {
@@ -22,7 +28,7 @@ public:
     string make_dump_string();
     bool operator!=(const Attribute&);
     bool operator==(const Attribute&);
-    Attribute make_from_dump(string& str);
+    static Attribute make_from_dump(string& str);
 
 protected:///Members
 	bool m_is_root;
