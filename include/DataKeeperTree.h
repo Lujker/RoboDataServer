@@ -12,6 +12,7 @@ class Attribute
 public:
 	Attribute() noexcept;
 	Attribute(QVariant*) noexcept;
+    Attribute(string&) noexcept;
     Attribute(QVariant*, const string&) noexcept;
 	virtual ~Attribute();	
     inline bool is_root();
@@ -19,6 +20,9 @@ public:
     inline QVariant* get_val();
 	const string& get_name();
     string make_dump_string();
+    bool operator!=(const Attribute&);
+    bool operator==(const Attribute&);
+    Attribute make_from_dump(string& str);
 
 protected:///Members
 	bool m_is_root;
@@ -33,6 +37,7 @@ public:
 	DataKeeperTree(const DataKeeperTree&) noexcept;
 	DataKeeperTree(DataKeeperTree*) noexcept;
 	DataKeeperTree(DataKeeperTree&&) noexcept;
+    DataKeeperTree(Attribute&) noexcept;
 	DataKeeperTree(QVariant*) noexcept;
 	DataKeeperTree(QVariant*, DataKeeperTree*) noexcept;
     virtual ~DataKeeperTree();
@@ -52,14 +57,18 @@ public:
     inline bool is_root();
     inline size_t childs_count(); ///return m_childs.size()
 
+    ///FIND ELEM IN STRUCT
+    static DataKeeperTree *find_by_attr(DataKeeperTree*, Attribute&);
+    static DataKeeperTree *find_by_name(DataKeeperTree*, string&);
+    DataKeeperTree *find_root();
 
     ///DUMPS WORK
-    virtual string get_dump(DataKeeperTree*);	///recursive make dump from this elem
-	virtual DataKeeperTree* from_dump(string&); ///convert from string dump
+    virtual string get_dump(DataKeeperTree*);
+    static DataKeeperTree* from_dump(string&);
 
 private:
-    void _getDump(DataKeeperTree*, string&);
-    void _parseDumpLine(DataKeeperTree*, string&);
+    void _getDump(DataKeeperTree*, string&);       ///recursive make dump from this elem
+    void _parseDumpLine(DataKeeperTree*, string&); ///convert from string dump
 
 protected: ///Members
 	Attribute m_atr;

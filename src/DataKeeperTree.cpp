@@ -2,11 +2,11 @@
 #define SEPORATOR std::string("/")
 /*!
  * \todo
- * Сделать загрузку дампов
+ * Сделать загрузку дампов и поиск по имени и атрибуту
+ * Продумать обход дерева
  * Сделать граф интерфейс для примера на сервере и клиенте
  * Сделать функции отправки и приянтия дампов от клиента
  */
-
 
 DataKeeperTree::DataKeeperTree() noexcept:
     m_atr(nullptr), m_childs(nullptr), m_parent(nullptr)
@@ -39,6 +39,10 @@ DataKeeperTree::DataKeeperTree(QVariant* val) noexcept:
     m_atr(val), m_childs(nullptr), m_parent(nullptr)
 {
 }
+
+DataKeeperTree::DataKeeperTree(Attribute &attr) noexcept:
+    m_atr(attr), m_childs(nullptr), m_parent(nullptr)
+{}
 
 DataKeeperTree::DataKeeperTree(QVariant* val, DataKeeperTree* parent) noexcept:
     m_atr(val), m_childs(nullptr), m_parent(parent)
@@ -98,7 +102,27 @@ void DataKeeperTree::del_all_child(DataKeeperTree* branch)
 
 size_t DataKeeperTree::childs_count()
 {
-	return (m_childs != nullptr) ? m_childs->size() : 0;
+    return (m_childs != nullptr) ? m_childs->size() : 0;
+}
+
+DataKeeperTree *DataKeeperTree::find_by_attr(DataKeeperTree *root, Attribute &attr)
+{
+
+}
+
+DataKeeperTree *DataKeeperTree::find_by_name(DataKeeperTree *root, std::string &name)
+{
+
+}
+
+DataKeeperTree *DataKeeperTree::find_root()
+{
+    DataKeeperTree* ptr = this;
+    while(!ptr->is_root() && ptr->has_parent()){
+        ptr = ptr->m_parent;
+    }
+    if(ptr->is_root()) return ptr;
+    return nullptr;
 }
 
 bool DataKeeperTree::is_root()
@@ -180,6 +204,11 @@ Attribute::Attribute(QVariant* val) noexcept:
 {
 }
 
+Attribute::Attribute(std::string &name) noexcept:
+    m_is_root(false), m_val(nullptr), m_name(name)
+{
+}
+
 Attribute::Attribute(QVariant* val, const string& name) noexcept:
     m_is_root(false), m_val(val), m_name(name)
 {
@@ -222,4 +251,19 @@ std::string Attribute::make_dump_string()
             dump_str += get_val()->toString().toStdString();
 
     return dump_str;
+}
+
+bool Attribute::operator!=(const Attribute &other)
+{
+    return !(*this==other);
+}
+
+bool Attribute::operator==(const Attribute &other)
+{
+    return m_name==other.m_name && m_is_root==other.m_is_root;
+}
+
+Attribute Attribute::make_from_dump(std::string &str)
+{
+
 }
