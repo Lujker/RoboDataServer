@@ -9,8 +9,8 @@
 
 using std::string;
 
-std::vector<string> split (const string& s, string& delimiter);
-std::vector<string> split (const string& s, char& delimiter);
+std::vector<string> split (const string&, string&);
+std::vector<string> split (const string&, char&);
 
 
 class Attribute
@@ -72,6 +72,27 @@ public:
     virtual string get_dump(DataKeeperTree*);
     static DataKeeperTree* from_dump(string&);
 
+    ///ITERATOR FOR TREE
+    class TreeIterator{
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = DataKeeperTree;
+        using pointer           = DataKeeperTree*;
+        using reference         = DataKeeperTree&;
+
+        TreeIterator(pointer);
+
+        pointer operator*() const;
+        TreeIterator& operator++();
+        bool operator!=(const pointer)const;
+        bool operator==(const pointer)const;
+
+    private:
+        pointer ptr;
+    };
+
+    TreeIterator begin();
+    TreeIterator end();
 private:
     void _getDump(DataKeeperTree*, string&);       ///recursive make dump from this elem
     void _parseDumpLine(DataKeeperTree*, string&); ///convert from string dump
@@ -82,3 +103,11 @@ protected: ///Members
 	DataKeeperTree* m_parent;
 };
 
+///Для работы с алгоритмами! Надо тестить!!!
+namespace std {
+template<>
+struct iterator_traits<DataKeeperTree::TreeIterator>{
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = DataKeeperTree;
+};
+}
