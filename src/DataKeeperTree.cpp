@@ -2,10 +2,18 @@
 #define SEPORATOR std::string("/")
 /*!
  * \todo
- * Сделать загрузку дампов и поиск по имени и атрибуту
+ * Сделать загрузку дампов
  * Продумать обход дерева и итератор
  * Сделать граф интерфейс для примера на сервере и клиенте
  * Сделать функции отправки и приянтия дампов от клиента
+ *
+ *
+ * \todo Реализовать!
+ * DataKeeperTree::TreeIterator &DataKeeperTree::TreeIterator::operator++()
+ * DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
+ * void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
+ * Attribute Attribute::make_from_dump(std::string &str)
+ *
  */
 
 DataKeeperTree::DataKeeperTree() noexcept:
@@ -107,12 +115,28 @@ size_t DataKeeperTree::childs_count()
 
 DataKeeperTree *DataKeeperTree::find_by_attr(DataKeeperTree *root, Attribute &attr)
 {
-
+    static DataKeeperTree* sought = nullptr;
+    if(sought==nullptr){
+        if(root->m_atr!=attr)
+            for(auto it: *root->m_childs)
+                find_by_attr(it, attr);
+        else
+            sought = root;
+    }
+    return sought;
 }
 
 DataKeeperTree *DataKeeperTree::find_by_name(DataKeeperTree *root, std::string &name)
 {
-
+    static DataKeeperTree* sought = nullptr;
+    if(sought==nullptr){
+        if(root->m_atr.get_name()!=name)
+            for(auto it: *root->m_childs)
+                find_by_name(it, name);
+        else
+            sought = root;
+    }
+    return sought;
 }
 
 DataKeeperTree *DataKeeperTree::find_root()
@@ -295,4 +319,51 @@ std::vector<std::string> split(const std::string &s, char &delim)
     }
 
     return result;
+}
+
+DataKeeperTree::TreeIterator::TreeIterator(DataKeeperTree::TreeIterator::pointer point): ptr(point)
+{}
+
+DataKeeperTree::TreeIterator::pointer DataKeeperTree::TreeIterator::operator*() const
+{
+    return this->ptr;
+}
+
+DataKeeperTree::TreeIterator &DataKeeperTree::TreeIterator::operator++()
+{
+//    if(ptr->has_childs() && ptr->childs_count()!=0){
+//        ptr = ptr->m_childs->at(0);
+//    }
+//    else{
+//        auto vec_ptr = ptr->m_parent->m_childs;
+//        auto it = std::find(vec_ptr->begin(), vec_ptr->end(), ptr);
+//        if(it!=vec_ptr->end()){
+//            if(*it != vec_ptr->at(vec_ptr->size()))
+//                ptr = *(++it); ///next elem in vect
+//            else;
+//        }
+//        else; ///FAIL
+//    }
+
+    return *this;
+}
+
+bool DataKeeperTree::TreeIterator::operator!=(const DataKeeperTree::TreeIterator::pointer other) const
+{
+    return ptr != other;
+}
+
+bool DataKeeperTree::TreeIterator::operator==(const DataKeeperTree::TreeIterator::pointer other) const
+{
+    return ptr == other;
+}
+
+bool DataKeeperTree::TreeIterator::operator!=(const DataKeeperTree::TreeIterator& other) const
+{
+    return ptr != other.ptr;
+}
+
+bool DataKeeperTree::TreeIterator::operator==(const DataKeeperTree::TreeIterator& other) const
+{
+    return ptr == other.ptr;
 }

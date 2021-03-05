@@ -39,6 +39,8 @@ protected:///Members
 class DataKeeperTree
 {
 public:
+    friend class TreeIterator;
+
 	DataKeeperTree() noexcept;
 	DataKeeperTree(const DataKeeperTree&) noexcept;
 	DataKeeperTree(DataKeeperTree*) noexcept;
@@ -75,17 +77,18 @@ public:
     ///ITERATOR FOR TREE
     class TreeIterator{
     public:
-        using iterator_category = std::forward_iterator_tag;
         using value_type        = DataKeeperTree;
         using pointer           = DataKeeperTree*;
         using reference         = DataKeeperTree&;
 
-        TreeIterator(pointer);
+        TreeIterator(pointer = nullptr);
 
         pointer operator*() const;
-        TreeIterator& operator++();
+        TreeIterator &operator++();
         bool operator!=(const pointer)const;
+        bool operator!=(const TreeIterator&)const;
         bool operator==(const pointer)const;
+        bool operator==(const TreeIterator&)const;
 
     private:
         pointer ptr;
