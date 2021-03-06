@@ -92,6 +92,7 @@ public:
 
     private:
         pointer ptr;
+        pointer prev_ptr;
     };
 
     TreeIterator begin();

@@ -321,7 +321,7 @@ std::vector<std::string> split(const std::string &s, char &delim)
     return result;
 }
 
-DataKeeperTree::TreeIterator::TreeIterator(DataKeeperTree::TreeIterator::pointer point): ptr(point)
+DataKeeperTree::TreeIterator::TreeIterator(DataKeeperTree::TreeIterator::pointer point): ptr(point), prev_ptr(nullptr)
 {}
 
 DataKeeperTree::TreeIterator::pointer DataKeeperTree::TreeIterator::operator*() const
@@ -331,20 +331,36 @@ DataKeeperTree::TreeIterator::pointer DataKeeperTree::TreeIterator::operator*() 
 
 DataKeeperTree::TreeIterator &DataKeeperTree::TreeIterator::operator++()
 {
-//    if(ptr->has_childs() && ptr->childs_count()!=0){
-//        ptr = ptr->m_childs->at(0);
-//    }
-//    else{
-//        auto vec_ptr = ptr->m_parent->m_childs;
-//        auto it = std::find(vec_ptr->begin(), vec_ptr->end(), ptr);
-//        if(it!=vec_ptr->end()){
-//            if(*it != vec_ptr->at(vec_ptr->size()))
-//                ptr = *(++it); ///next elem in vect
-//            else;
-//        }
-//        else; ///FAIL
-//    }
-
+    if(ptr->has_childs() && ptr->childs_count()!=0){
+        ptr = ptr->m_childs->at(0);
+    }
+    else{
+        auto parent_ptr = ptr->m_parent;
+        auto vec_ptr = ptr->m_parent->m_childs;
+        auto it = std::find(vec_ptr->begin(), vec_ptr->end(), ptr);
+        if(it!=vec_ptr->end()){
+            while (*it == vec_ptr->at(vec_ptr->size())) { ///Если мы последний элемент у данного верктора
+                parent_ptr = (*it)->m_parent;
+                vec_ptr = parent_ptr->m_parent->m_childs;
+                it = std::find(vec_ptr->begin(), vec_ptr->end(), parent_ptr);
+                if(it==vec_ptr->end()) {
+                    throw std::out_of_range("Error! Not found preious element in children vector");
+                    return *this;
+                }
+            }
+            if(*it != vec_ptr->at(vec_ptr->size())){
+                ptr = *(++it); ///next elem in vect
+            }
+            else{
+                throw std::out_of_range("Error! Not found preious element in children vector");
+                return *this;
+            }
+        }
+        else{
+            throw std::out_of_range("Error! Not found preious element in children vector");
+            return *this; ///Возвращаем старый указатель если не нашли !!!Но лучше исключение
+        }
+    }
     return *this;
 }
 
