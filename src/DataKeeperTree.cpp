@@ -3,17 +3,15 @@
 /*!
  * \todo
  * Сделать загрузку дампов
- * Продумать обход дерева и итератор
+ * Написать тесты
  * Сделать граф интерфейс для примера на сервере и клиенте
  * Сделать функции отправки и приянтия дампов от клиента
  *
  *
- * \todo Реализовать!
- * DataKeeperTree::TreeIterator &DataKeeperTree::TreeIterator::operator++()
- * DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
- * void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
- * Attribute Attribute::make_from_dump(std::string &str)
  *
+ * \todo Реализовать!
+ * void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
+ * Attribute Attribute::make_from_dump(std::string &str) *
  */
 
 DataKeeperTree::DataKeeperTree() noexcept:
@@ -176,14 +174,31 @@ bool DataKeeperTree::has_name()
 
 string DataKeeperTree::get_dump(DataKeeperTree* branch)
 {
-    std::string dump_str;
-    _getDump(branch, dump_str);
-    return dump_str;
+    if(branch!=nullptr){
+        std::string dump_str;
+        _getDump(branch, dump_str);
+        return dump_str;
+    }
+    else return std::string();
 }
 
+//!
+//! \brief DataKeeperTree::from_dump
+//! \param dump_str
+//! \return if dump_str empty return nullptr else return root elem of new Tree
+//!
 DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
 {
-    return nullptr;
+    if(!dump_str.empty()){
+        auto str_vect = split(dump_str,'\n');
+        DataKeeperTree* root = new DataKeeperTree(); ///Make root element
+        for(auto it: str_vect)                       ///And parse all string from dump
+            _parseDumpLine(root, it);
+        return root;
+    }
+    else{
+        return nullptr;
+    }
 }
 
 //!
@@ -269,7 +284,10 @@ std::string Attribute::make_dump_string()
     std::string dump_str = SEPORATOR;
 
     if(is_root())   dump_str+="root";
+
     if(!m_name.empty()) is_root() ? dump_str += "," + m_name : dump_str += m_name;
+    else is_root() ? dump_str += "," + std::string("m_name") : dump_str += "m_name"; ///generate name if has not
+
     if(is_valid())  (!m_name.empty()||is_root())?
             dump_str += "," + get_val()->toString().toStdString():
             dump_str += get_val()->toString().toStdString();
@@ -308,7 +326,7 @@ std::vector<std::string> split(const std::string &s, std::string &delimiter)
     return res;
 }
 
-std::vector<std::string> split(const std::string &s, char &delim)
+std::vector<std::string> split(const std::string &s, char delim)
 {
     std::vector<string> result;
     std::stringstream ss (s);
@@ -329,6 +347,7 @@ DataKeeperTree::TreeIterator::pointer DataKeeperTree::TreeIterator::operator*() 
     return this->ptr;
 }
 
+///Надо тестить
 DataKeeperTree::TreeIterator &DataKeeperTree::TreeIterator::operator++()
 {
     if(ptr->has_childs() && ptr->childs_count()!=0){

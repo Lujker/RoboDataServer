@@ -10,7 +10,7 @@
 using std::string;
 
 std::vector<string> split (const string&, string&);
-std::vector<string> split (const string&, char&);
+std::vector<string> split (const string&, char);
 
 
 class Attribute
@@ -99,7 +99,7 @@ public:
     TreeIterator end();
 private:
     void _getDump(DataKeeperTree*, string&);       ///recursive make dump from this elem
-    void _parseDumpLine(DataKeeperTree*, string&); ///convert from string dump
+    static void _parseDumpLine(DataKeeperTree*, string&); ///convert from string dump
 
 protected: ///Members
 	Attribute m_atr;
