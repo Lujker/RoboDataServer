@@ -50,6 +50,12 @@ DataKeeperTree::DataKeeperTree(Attribute &attr) noexcept:
     m_atr(attr), m_childs(nullptr), m_parent(nullptr)
 {}
 
+DataKeeperTree::DataKeeperTree(Attribute attr, DataKeeperTree *parent) noexcept:
+    m_atr(attr), m_childs(nullptr), m_parent(parent)
+{
+    m_parent->push_child(this);
+}
+
 DataKeeperTree::DataKeeperTree(QVariant* val, DataKeeperTree* parent) noexcept:
     m_atr(val), m_childs(nullptr), m_parent(parent)
 {
@@ -223,7 +229,12 @@ void DataKeeperTree::_getDump(DataKeeperTree* parent , std::string &str)
 //!
 void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
 {
-
+    auto str_vect = split(line, SEPORATOR);
+    for(auto it:str_vect){
+        auto new_attr = Attribute::make_from_dump(it);
+        /// ВСТАВИТЬ ПРОВЕРКУ ПО ИМЕНИ ///
+        root = new DataKeeperTree(new_attr, root);
+    }
 }
 
 DataKeeperTree::~DataKeeperTree()
@@ -310,7 +321,7 @@ Attribute Attribute::make_from_dump(std::string &str)
 
 }
 
-std::vector<std::string> split(const std::string &s, std::string &delimiter)
+std::vector<std::string> split(const std::string &s, std::string delimiter)
 {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
     string token;

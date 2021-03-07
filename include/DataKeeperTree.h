@@ -9,7 +9,7 @@
 
 using std::string;
 
-std::vector<string> split (const string&, string&);
+std::vector<string> split (const string&, string);
 std::vector<string> split (const string&, char);
 
 
@@ -46,6 +46,7 @@ public:
 	DataKeeperTree(DataKeeperTree*) noexcept;
 	DataKeeperTree(DataKeeperTree&&) noexcept;
     DataKeeperTree(Attribute&) noexcept;
+    DataKeeperTree(Attribute, DataKeeperTree*)noexcept;
 	DataKeeperTree(QVariant*) noexcept;
 	DataKeeperTree(QVariant*, DataKeeperTree*) noexcept;
     virtual ~DataKeeperTree();
