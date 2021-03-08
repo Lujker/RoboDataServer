@@ -98,6 +98,8 @@ public:
 
     TreeIterator begin();
     TreeIterator end();
+    DataKeeperTree* at(const int i);
+    DataKeeperTree* operator[](const int i);
 private:
     void _getDump(DataKeeperTree*, string&);       ///recursive make dump from this elem
     static void _parseDumpLine(DataKeeperTree*, string&); ///convert from string dump

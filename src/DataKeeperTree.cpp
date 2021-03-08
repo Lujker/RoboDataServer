@@ -207,6 +207,17 @@ DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
     }
 }
 
+DataKeeperTree *DataKeeperTree::at(const int i)
+{
+    if(i>=m_childs->size()) return nullptr;
+    else return m_childs->at(i);
+}
+
+DataKeeperTree *DataKeeperTree::operator[](const int i)
+{
+    return m_childs->at(i);
+}
+
 //!
 //! \brief DataKeeperTree::_getDump - service func for recursive getting dump of tree
 //! \param parent - for call all children and return litlle dump string
@@ -230,6 +241,7 @@ void DataKeeperTree::_getDump(DataKeeperTree* parent , std::string &str)
 void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
 {
     auto str_vect = split(line, SEPORATOR);
+    auto temp_branch = root;
     for(auto it:str_vect){
         auto new_attr = Attribute::make_from_dump(it);
         /// ВСТАВИТЬ ПРОВЕРКУ ПО ИМЕНИ ///
