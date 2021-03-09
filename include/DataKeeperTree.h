@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <exception>
 #include <sstream>
 #include <QObject>
 #include <QVariant>
@@ -51,6 +52,11 @@ public:
 	DataKeeperTree(QVariant*, DataKeeperTree*) noexcept;
     virtual ~DataKeeperTree();
 
+    bool operator==(const DataKeeperTree&);
+    bool operator==(const Attribute&);
+    bool operator!=(const DataKeeperTree&);
+    bool operator!=(const Attribute&);
+
     ///TREE INTERACTION
 	virtual void push_child(DataKeeperTree*);
     virtual void del_all_child(DataKeeperTree*); ///recursive del all obj in m_childs
@@ -98,7 +104,7 @@ public:
 
     TreeIterator begin();
     TreeIterator end();
-    DataKeeperTree* at(const int i);
+    DataKeeperTree* at(const size_t i);
     DataKeeperTree* operator[](const int i);
 private:
     void _getDump(DataKeeperTree*, string&);       ///recursive make dump from this elem

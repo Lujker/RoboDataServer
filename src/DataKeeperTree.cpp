@@ -207,7 +207,7 @@ DataKeeperTree* DataKeeperTree::from_dump(string& dump_str)
     }
 }
 
-DataKeeperTree *DataKeeperTree::at(const int i)
+DataKeeperTree *DataKeeperTree::at(const size_t i)
 {
     if(i>=m_childs->size()) return nullptr;
     else return m_childs->at(i);
@@ -240,12 +240,25 @@ void DataKeeperTree::_getDump(DataKeeperTree* parent , std::string &str)
 //!
 void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
 {
+    if(line.empty()) return;
+    if(root==nullptr) return;
     auto str_vect = split(line, SEPORATOR);
     auto temp_branch = root;
     for(auto it:str_vect){
         auto new_attr = Attribute::make_from_dump(it);
-        /// ВСТАВИТЬ ПРОВЕРКУ ПО ИМЕНИ ///
-        root = new DataKeeperTree(new_attr, root);
+        DataKeeperTree branch(new_attr);
+        if(new_attr.is_root()){
+            continue;
+        }
+        else{
+            auto elem = std::find(temp_branch->m_childs->begin(),temp_branch->m_childs->end(), new_attr);
+            if(elem!=temp_branch->m_childs->end()){
+                root = *elem;
+            }
+            else{
+                root = new DataKeeperTree(new_attr, root);
+            }
+        }
     }
 }
 
@@ -253,7 +266,27 @@ DataKeeperTree::~DataKeeperTree()
 {
 	for (auto it : *m_childs)
 		delete it;
-	delete m_childs;
+    delete m_childs;
+}
+
+bool DataKeeperTree::operator==(const DataKeeperTree &other)
+{
+    return this->m_atr==other.m_atr;
+}
+
+bool DataKeeperTree::operator==(const Attribute &attr)
+{
+    return this->m_atr==attr;
+}
+
+bool DataKeeperTree::operator!=(const DataKeeperTree &other)
+{
+    return this->m_atr!=other.m_atr;
+}
+
+bool DataKeeperTree::operator!=(const Attribute &attr)
+{
+    return this->m_atr!=attr;
 }
 
 Attribute::Attribute() noexcept:
@@ -330,7 +363,7 @@ bool Attribute::operator==(const Attribute &other)
 
 Attribute Attribute::make_from_dump(std::string &str)
 {
-
+    auto vec = split(str,',');
 }
 
 std::vector<std::string> split(const std::string &s, std::string delimiter)
