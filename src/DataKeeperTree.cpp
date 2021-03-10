@@ -2,17 +2,10 @@
 #define SEPORATOR std::string("/")
 /*!
  * \todo
- * Сделать загрузку дампов
- * Написать тесты
- * Сделать граф интерфейс для примера на сервере и клиенте
- * Сделать функции отправки и приянтия дампов от клиента
- *
- *
- *
- * \todo Реализовать!
- * void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
- * Attribute Attribute::make_from_dump(std::string &str) *
- */
+ * 1) Написать тесты и отладить
+ * 2) Сделать граф интерфейс для примера на сервере и клиенте
+ * 3) Сделать функции отправки и приянтия дампов от клиента
+ !*/
 
 DataKeeperTree::DataKeeperTree() noexcept:
     m_atr(nullptr), m_childs(nullptr), m_parent(nullptr)
@@ -342,7 +335,7 @@ std::string Attribute::make_dump_string()
     if(is_root())   dump_str+="root";
 
     if(!m_name.empty()) is_root() ? dump_str += "," + m_name : dump_str += m_name;
-    else is_root() ? dump_str += "," + std::string("m_name") : dump_str += "m_name"; ///generate name if has not
+    else is_root() ? dump_str += "," + generate_name() : dump_str += generate_name(); ///generate name if has not
 
     if(is_valid())  (!m_name.empty()||is_root())?
             dump_str += "," + get_val()->toString().toStdString():
@@ -364,6 +357,51 @@ bool Attribute::operator==(const Attribute &other)
 Attribute Attribute::make_from_dump(std::string &str)
 {
     auto vec = split(str,',');
+    Attribute attr;
+    attr.m_is_root = false;
+    if(vec.size()!=0){
+        if(vec.size()==1){
+            if(vec[0]=="root") attr.m_is_root = true;
+            else attr.set_name(vec[0]);
+        }
+        else if(vec.size()==2){
+            if(vec[0]=="root") {
+                attr.m_is_root = true;
+                attr.set_name(vec[1]);
+            }
+            else{
+                attr.m_name=vec[0];
+                attr.m_val = new QVariant(QString::fromStdString(vec[1]));
+            }
+        }
+        else if(vec.size()==3){
+            attr.m_is_root = true;
+            attr.set_name(vec[1]);
+            attr.m_val = new QVariant(QString::fromStdString(vec[1]));
+        }
+    }
+    return attr;
+}
+
+bool Attribute::set_name(std::string &str)
+{
+    if(str.find("GeneratedName_")!=std::string::npos){
+        return false;
+    }
+    else{
+        this->m_name = str;
+        return true;
+    }
+    return false;
+}
+
+std::string Attribute::generate_name()
+{
+    static int name_numb = 0;
+    std::string str = "GeneratedName_";
+    str += std::to_string(name_numb);
+    ++name_numb;
+    return str;
 }
 
 std::vector<std::string> split(const std::string &s, std::string delimiter)

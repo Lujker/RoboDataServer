@@ -32,6 +32,8 @@ public:
     static Attribute make_from_dump(string& str);
 
 protected:///Members
+    bool set_name(std::string&);
+    std::string generate_name();
 	bool m_is_root;
 	QVariant* m_val;
 	string m_name;
