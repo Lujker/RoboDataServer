@@ -13,6 +13,7 @@ using std::string;
 std::vector<string> split (const string&, string);
 std::vector<string> split (const string&, char);
 
+class DataKeeperTree;
 
 class Attribute
 {
@@ -29,6 +30,7 @@ public:
     string make_dump_string();
     bool operator!=(const Attribute&);
     bool operator==(const Attribute&);
+    bool operator==(DataKeeperTree*);
     static Attribute make_from_dump(string& str);
 
 protected:///Members
@@ -43,6 +45,7 @@ class DataKeeperTree
 {
 public:
     friend class TreeIterator;
+    friend class Attribute;
 
 	DataKeeperTree() noexcept;
 	DataKeeperTree(const DataKeeperTree&) noexcept;
@@ -91,6 +94,8 @@ public:
         using reference         = DataKeeperTree&;
 
         TreeIterator(pointer = nullptr);
+        TreeIterator* operator=(TreeIterator&);
+        TreeIterator* operator=(DataKeeperTree*);
 
         pointer operator*() const;
         TreeIterator &operator++();
@@ -118,7 +123,7 @@ protected: ///Members
 	DataKeeperTree* m_parent;
 };
 
-///Для работы с алгоритмами! Надо тестить!!!
+/////Для работы с алгоритмами! Надо тестить!!!
 namespace std {
 template<>
 struct iterator_traits<DataKeeperTree::TreeIterator>{

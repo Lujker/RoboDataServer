@@ -87,7 +87,7 @@ void DataKeeperTree::erase_elem(DataKeeperTree *elem)
 
     auto it = std::find(vect_ptr->begin(), vect_ptr->end(), elem);
     if(it!=vect_ptr->end()){
-        const auto new_end (std::remove(vect_ptr->begin(),vect_ptr->end(),it));
+        const auto new_end (std::remove(vect_ptr->begin(),vect_ptr->end(),*it));
         vect_ptr->erase(new_end, vect_ptr->end()); ///in erase use deallocate() and destroy(), all right ;)
         elem=nullptr;
     }
@@ -239,12 +239,14 @@ void DataKeeperTree::_parseDumpLine(DataKeeperTree *root, std::string &line)
     auto temp_branch = root;
     for(auto it:str_vect){
         auto new_attr = Attribute::make_from_dump(it);
-        DataKeeperTree branch(new_attr);
+//        DataKeeperTree branch(new_attr);
         if(new_attr.is_root()){
             continue;
         }
         else{
-            auto elem = std::find(temp_branch->m_childs->begin(),temp_branch->m_childs->end(), new_attr);
+            auto elem = std::find_if(temp_branch->m_childs->begin(), temp_branch->m_childs->end(), [&new_attr](DataKeeperTree* arg){
+                    return arg->m_atr==new_attr;
+            });
             if(elem!=temp_branch->m_childs->end()){
                 root = *elem;
             }
@@ -354,6 +356,11 @@ bool Attribute::operator==(const Attribute &other)
     return m_name==other.m_name && m_is_root==other.m_is_root;
 }
 
+bool Attribute::operator==(DataKeeperTree* other)
+{
+    return *this==other->m_atr;
+}
+
 Attribute Attribute::make_from_dump(std::string &str)
 {
     auto vec = split(str,',');
@@ -436,6 +443,12 @@ std::vector<std::string> split(const std::string &s, char delim)
 DataKeeperTree::TreeIterator::TreeIterator(DataKeeperTree::TreeIterator::pointer point): ptr(point), prev_ptr(nullptr)
 {}
 
+DataKeeperTree::TreeIterator *DataKeeperTree::TreeIterator::operator=(DataKeeperTree::TreeIterator &iter)
+{
+    this->ptr=iter.ptr;
+    return this;
+}
+
 DataKeeperTree::TreeIterator::pointer DataKeeperTree::TreeIterator::operator*() const
 {
     return this->ptr;
@@ -450,12 +463,16 @@ DataKeeperTree::TreeIterator &DataKeeperTree::TreeIterator::operator++()
     else{
         auto parent_ptr = ptr->m_parent;
         auto vec_ptr = ptr->m_parent->m_childs;
-        auto it = std::find(vec_ptr->begin(), vec_ptr->end(), ptr);
+        auto it = std::find_if(vec_ptr->begin(), vec_ptr->end(), [this](DataKeeperTree* arg){
+                return arg->m_atr==ptr->m_atr;
+        });
         if(it!=vec_ptr->end()){
             while (*it == vec_ptr->at(vec_ptr->size())) { ///Если мы последний элемент у данного верктора
                 parent_ptr = (*it)->m_parent;
                 vec_ptr = parent_ptr->m_parent->m_childs;
-                it = std::find(vec_ptr->begin(), vec_ptr->end(), parent_ptr);
+                it = std::find_if(vec_ptr->begin(), vec_ptr->end(), [&parent_ptr](DataKeeperTree* arg){
+                        return arg->m_atr==parent_ptr;
+                 });
                 if(it==vec_ptr->end()) {
                     throw std::out_of_range("Error! Not found preious element in children vector");
                     return *this;
