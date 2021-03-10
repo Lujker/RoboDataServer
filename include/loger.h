@@ -18,7 +18,7 @@ enum LOG_TYPE {
 class Loger
 {
 public:
-    static Loger *getInstanse();
+    static Loger &getInstanse();
 
     virtual bool init(const std::string &logFilePath);
     virtual bool writeMessage(const char* mes, LOG_TYPE type=DEB);

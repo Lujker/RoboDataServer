@@ -8,7 +8,7 @@ struct Settings{
 class ServSettings
 {
 public:
-    static ServSettings *get_instanse();
+    static ServSettings &get_instanse();
     void parse_args(int argc, char *argv[]);
     bool is_init();
     const Settings &get_settings();

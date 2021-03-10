@@ -1,9 +1,5 @@
 #include "loger.h"
 
-namespace LOGER{
-static Loger* G_loger = nullptr;
-}
-
 bool Loger::init(const std::string &logFilePath)
 {
     try{
@@ -32,12 +28,10 @@ bool Loger::init(const std::string &logFilePath)
     }
 }
 
-Loger *Loger::getInstanse()
+Loger &Loger::getInstanse()
 {
-    if(LOGER::G_loger==nullptr){
-        LOGER::G_loger = new Loger();
-    }
-    return LOGER::G_loger;
+    static Loger log;
+    return log;
 }
 
 bool Loger::writeMessage(const char *mes, LOG_TYPE type)

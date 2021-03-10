@@ -1,13 +1,9 @@
 #include "servsettings.h"
 
-namespace SETTING {
-    static ServSettings* sett = nullptr;
-}
-
-ServSettings *ServSettings::get_instanse()
+ServSettings &ServSettings::get_instanse()
 {
-    if(SETTING::sett==nullptr) SETTING::sett = new ServSettings();
-    return SETTING::sett;
+    static ServSettings sett;
+    return sett;
 }
 
 void ServSettings::parse_args(int argc, char *argv[])
@@ -29,3 +25,6 @@ ServSettings::ServSettings(int argc, char *argv[])
 {
     parse_args(argc, argv);
 }
+
+ServSettings::~ServSettings()
+{}
