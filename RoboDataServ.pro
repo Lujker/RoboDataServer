@@ -24,6 +24,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 SOURCES += \
+    src/servsettings.cpp \
     src/DataKeeperTree.cpp \
     src/loger.cpp \
     src/main.cpp
@@ -32,6 +33,7 @@ RESOURCES +=
 
 HEADERS += \
     include/DataKeeperTree.h \
-    include/loger.h
+    include/loger.h \
+    include/servsettings.h
 
 DISTFILES +=
