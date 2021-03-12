@@ -1,4 +1,4 @@
-QT += quick core testlib
+QT += quick core
 
 CONFIG += c++11
 TEMPLATE = app

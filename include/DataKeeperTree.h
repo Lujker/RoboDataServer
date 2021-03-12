@@ -21,11 +21,12 @@ public:
 	Attribute() noexcept;
 	Attribute(QVariant*) noexcept;
     Attribute(string&) noexcept;
+    Attribute(string) noexcept;
     Attribute(QVariant*, const string&) noexcept;
 	virtual ~Attribute();	
-    inline bool is_root();
-    inline bool is_valid();
-    inline QVariant* get_val();
+    bool is_root();
+    bool is_valid();
+    QVariant* get_val();
 	const string& get_name();
     string make_dump_string();
     bool operator!=(const Attribute&);

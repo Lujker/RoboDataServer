@@ -6,4 +6,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES +=  tst_testdatakeepertree.cpp
+SOURCES +=  tst_testdatakeepertree.cpp \
+    ../../src/DataKeeperTree.cpp
+
+HEADERS += \
+    ../../include/DataKeeperTree.h

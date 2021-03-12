@@ -1,4 +1,5 @@
-#include "DataKeeperTree.h"
+//#include "DataKeeperTree.h"
+#include "../../include/DataKeeperTree.h"
 #define SEPORATOR std::string("/")
 /*!
  * \todo
@@ -295,6 +296,11 @@ Attribute::Attribute(QVariant* val) noexcept:
 }
 
 Attribute::Attribute(std::string &name) noexcept:
+    m_is_root(false), m_val(nullptr), m_name(name)
+{
+}
+
+Attribute::Attribute(std::string name) noexcept:
     m_is_root(false), m_val(nullptr), m_name(name)
 {
 }
