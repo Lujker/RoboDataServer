@@ -70,7 +70,7 @@ void TestDataKeeperTree::test_make_dump_attr()
     std::string attr_dump = "/root,GeneratedName_0";
     std::string attr_1_dump = "/GeneratedName_1,1";
     std::string attr_2_dump = "/name";
-    std::string attr_3_dump = "/name,3";
+    std::string attr_3_dump = "/Name,3";
 
 //    std::string nn = attr_1.make_dump_string();
 
