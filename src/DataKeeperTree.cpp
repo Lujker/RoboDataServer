@@ -345,9 +345,9 @@ std::string Attribute::make_dump_string()
     if(!m_name.empty()) is_root() ? dump_str += "," + m_name : dump_str += m_name;
     else is_root() ? dump_str += "," + generate_name() : dump_str += generate_name(); ///generate name if has not
 
-    if(is_valid())  (!m_name.empty()||is_root())?
-            dump_str += "," + get_val()->toString().toStdString():
-            dump_str += get_val()->toString().toStdString();
+    if(is_valid()) {
+        dump_str += "," + get_val()->toString().toStdString();
+    }
 
     return dump_str;
 }

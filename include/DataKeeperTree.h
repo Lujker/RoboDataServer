@@ -18,16 +18,17 @@ class DataKeeperTree;
 class Attribute
 {
 public:
-	Attribute() noexcept;
-	Attribute(QVariant*) noexcept;
+    Attribute() noexcept;
+    Attribute(QVariant*) noexcept;
     Attribute(string&) noexcept;
     Attribute(string) noexcept;
     Attribute(QVariant*, const string&) noexcept;
-	virtual ~Attribute();	
+    virtual ~Attribute();
+
     bool is_root();
     bool is_valid();
     QVariant* get_val();
-	const string& get_name();
+    const string& get_name();
     string make_dump_string();
     bool operator!=(const Attribute&);
     bool operator==(const Attribute&);
